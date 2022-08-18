@@ -34,7 +34,7 @@ team_members.forEach( ( member ) => {
     //- find if their name is any of the birthday array.
     //-- If it is, add to found birthdays. 
     birthdays.forEach( ( birthdate ) => {
-      if(birthdate.toLowerCase().includes( member.trim().toLowerCase() ) ){
+      if( birthdate.toLowerCase().includes( member.trim().toLowerCase() ) ){
          found_birthdays.push( birthdate );
       }
     });
