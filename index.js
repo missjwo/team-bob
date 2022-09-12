@@ -23,56 +23,49 @@ if ( ! birthdays.length && ! peoples_status.length && ! work_anniversaries.lengt
  return [{}];
 }
 
-const found_birthdays = [];
-const found_status = [];
-const found_anniversaries = [];
+let found_birthdays = [];
+let found_status = [];
+let found_anniversaries = [];
+
+//Find Member in a list Function 
+function findMember( list, person ) {
+
+  for (let i = 0; i < list.length ; i++) {
+    if( list[i].toLowerCase().includes( person.trim().toLowerCase() ) ){
+      return list[i];
+    }
+  }
+}
 
 // Loop through each team member
 team_members.forEach( ( member ) => {
 
   if ( birthdays.length ) {
-    //- find if their name is any of the birthday array.
-    //-- If it is, add to found birthdays. 
-    birthdays.forEach( ( birthdate ) => {
-      if( birthdate.toLowerCase().includes( member.trim().toLowerCase() ) ){
-         found_birthdays.push( birthdate );
-      }
-    });
-  }
-
-  if ( peoples_status ) {
-    //- find if their name is any of the peoples status array.
-    //-- If it is, add to found statuses
-    peoples_status.forEach( ( status ) => {
-      if( status.toLowerCase().includes( member.trim().toLowerCase() ) ){
-         found_status.push( status );
-      }
-    });
+    found_birthdays.push( findMember( birthdays, member ) );
   }
   
-  if ( work_anniversaries ) {
-    //- find if their name is contained in any of the work anniversaries array.
-    //-- if it is add to found anniversaries.
-    work_anniversaries.forEach( ( anniversary ) => {
-      if( anniversary.toLowerCase().includes( member.trim().toLowerCase() ) ){
-         found_anniversaries.push( anniversary );
-      }
-    });
+  if ( peoples_status.length ) {
+    found_status.push( findMember( peoples_status, member ) );
+  }
+  
+  if ( work_anniversaries.length ) {
+    found_anniversaries.push( findMember( work_anniversaries, member ) );
   }
 
-});
+} );
 
 /* 
   Format finds and turn into Slack messages. 
-  - if either message is empty,  output a empty array. 
-  - if a message has content, add header, format and styling. 
-  - output final Slack message.
+  - Check if there are found messages. 
+  - If a message has content, add heading with Slack MarkDown formatting and styling before adding the found messages. 
+  - Add to final Slack message.
 */
 
 let return_msg ="";
 
 // Check, sort and build Peoples Status message.
-if ( Array.isArray( found_status ) && found_status.length) {
+if ( Array.isArray( found_status ) && found_status.length ) {
+
   found_status.sort();
   return_msg += "*People\'s Status*\n";
   return_msg += found_status.join( "\n" );
@@ -81,6 +74,7 @@ if ( Array.isArray( found_status ) && found_status.length) {
 
 // Check, sort and build Work Anniversaries message.
 if ( Array.isArray( found_anniversaries ) && found_anniversaries.length ) {
+
   found_anniversaries.sort();
   return_msg += "*Work Anniversaries*\n";
   return_msg += found_anniversaries.join( "\n" );
@@ -89,16 +83,17 @@ if ( Array.isArray( found_anniversaries ) && found_anniversaries.length ) {
 
 // Check, sort and build birthday message.
 if ( Array.isArray( found_birthdays ) && found_birthdays.length ) {
+
   found_birthdays.sort();
   return_msg += "*Birthdays*\n";
   return_msg += found_birthdays.join( "\n" );
   return_msg += "\n";
 }
 
-// Return what you want.
-if ( return_msg.trim().length ) {
-  
-  return_msg = "[Bob Daily Digest](" + inputData.permalink +")\n" + return_msg;
+// Return what you want
+if( return_msg.trim().length ) {
+
+  return_msg = "<" + inputData.permalink +"|Bob Daily Digest>\n" + return_msg;
   output = [{ return_msg }];
 } else {
   output = [{}];
