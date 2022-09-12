@@ -27,7 +27,7 @@ let found_birthdays = [];
 let found_status = [];
 let found_anniversaries = [];
 
-//Find Member in a list Function 
+//Find Member in a list. 
 function findMember( list, person ) {
 
   for (let i = 0; i < list.length ; i++) {
@@ -55,7 +55,7 @@ team_members.forEach( ( member ) => {
 } );
 
 /* 
-  Format finds and turn into Slack messages. 
+  Turn the results into a Slack message. 
   - Check if there are found messages. 
   - If a message has content, add heading with Slack MarkDown formatting and styling before adding the found messages. 
   - Add to final Slack message.
@@ -98,3 +98,4 @@ if( return_msg.trim().length ) {
 } else {
   output = [{}];
 }
+
